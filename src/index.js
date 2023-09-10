@@ -67,7 +67,7 @@ function createMurcup(array) {
       } = data;
       return `<div class="photo-card">
         <a href="${largeImageURL}">
-      <img src="${webformatURL}" alt="${tags}" loading="lazy" width="280" height="200" />
+      <img src="${webformatURL}" alt="${tags}" loading="lazy" width="300" height="200" />
       <div class="info">
         <p class="info-item">
           <b>Likes: </b><span class="numbers">${likes}</span>
