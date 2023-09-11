@@ -3,7 +3,6 @@ import Notiflix from 'notiflix';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { servicePhoto, perPage } from './service';
 
-console.log(perPage);
 const elements = {
   container: document.querySelector('.gallery'),
   tgt: document.querySelector('.search-form-js'),
@@ -30,7 +29,7 @@ function handlerLoadMore() {
       elements.container.insertAdjacentHTML('beforeend', createMurcup(data));
       if (data.totalHits / perPage <= page) {
         elements.btnLoad.classList.add('load-more-hidden');
-        Notiflix.Notify.info('Sorry bro, its last page ):');
+        Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
       }
       console.log(data);
     })
@@ -44,7 +43,7 @@ function hendlerSubmit(evt) {
   servicePhoto(1, textInput)
     .then(response => {
       if (response.total === 0) {
-        Notiflix.Notify.failure('Sorry, there are no images.please try again');
+        Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
       }
       console.log(response);
       const el = response.hits;
@@ -88,17 +87,15 @@ function createMurcup(array) {
     })
     .join('');
 
-let isFirstRequest = true;
+  let isFirstRequest = true;
 
-elements.container.insertAdjacentHTML('beforeend', resp);
-lightbox.refresh();
-if (array.totalHits > perPage) {
-  if (isFirstRequest) {
-    Notiflix.Notify.success('Hurray, we found 160 images');
-    isFirstRequest = false; 
-  }
-  elements.btnLoad.classList.replace('load-more-hidden', 'load-more');
-  }
-handleRequest();
+  elements.container.insertAdjacentHTML('beforeend', resp);
+  lightbox.refresh();
+  if (array.totalHits > perPage) {
+    if (isFirstRequest) {
+      Notiflix.Notify.success(`Hurray! We found ${array.totalHits} images.`);
+      isFirstRequest = false;
+    }
+    elements.btnLoad.classList.replace('load-more-hidden', 'load-more');
+  };
 }
-
