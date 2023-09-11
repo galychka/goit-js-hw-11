@@ -88,10 +88,17 @@ function createMurcup(array) {
     })
     .join('');
 
-  elements.container.insertAdjacentHTML('beforeend', resp);
-  lightbox.refresh();
-  if (array.totalHits > perPage) {
-    Notiflix.Notify.success('Hurray, we found 500 images');
-    elements.btnLoad.classList.replace('load-more-hidden', 'load-more');
+let isFirstRequest = true;
+
+elements.container.insertAdjacentHTML('beforeend', resp);
+lightbox.refresh();
+if (array.totalHits > perPage) {
+  if (isFirstRequest) {
+    Notiflix.Notify.success('Hurray, we found 160 images');
+    isFirstRequest = false; 
   }
+  elements.btnLoad.classList.replace('load-more-hidden', 'load-more');
+  }
+handleRequest();
 }
+
