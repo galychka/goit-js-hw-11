@@ -2,7 +2,6 @@ import SimpleLightbox from 'simplelightbox';
 import Notiflix from 'notiflix';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { servicePhoto, perPage } from './service';
-
 const elements = {
   container: document.querySelector('.gallery'),
   tgt: document.querySelector('.search-form-js'),
@@ -11,16 +10,13 @@ const elements = {
 const gallery = document.querySelector('.gallery');
 let page = 1;
 let textInput = '';
-
+let isFirstRequest = true; 
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
-
 elements.tgt.addEventListener('submit', hendlerSubmit);
 elements.btnLoad.addEventListener('click', handlerLoadMore);
-
-
 function handlerLoadMore() {
   page += 1;
   servicePhoto(page, textInput)
@@ -35,7 +31,6 @@ function handlerLoadMore() {
     })
     .catch(err => console.log(err));
 }
-
 function hendlerSubmit(evt) {
   evt.preventDefault();
   elements.container.innerHTML = '';
@@ -45,13 +40,16 @@ function hendlerSubmit(evt) {
       if (response.total === 0) {
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
       }
-      console.log(response);
+      // Виводимо повідомлення лише при першому запиті
+      if (isFirstRequest) {
+        Notiflix.Notify.success(`Hurray! We found ${response.totalHits} images.`);
+        isFirstRequest = false;
+      }
       const el = response.hits;
       return createMurcup(response);
     })
     .catch(err => console.log(err));
 }
-
 function createMurcup(array) {
   const resp = array.hits
     .map(data => {
@@ -86,16 +84,9 @@ function createMurcup(array) {
     `;
     })
     .join('');
-
-  let isFirstRequest = true;
-
   elements.container.insertAdjacentHTML('beforeend', resp);
   lightbox.refresh();
   if (array.totalHits > perPage) {
-    if (isFirstRequest) {
-      Notiflix.Notify.success(`Hurray! We found ${array.totalHits} images.`);
-      isFirstRequest = false;
-    }
     elements.btnLoad.classList.replace('load-more-hidden', 'load-more');
-  };
+  }
 }
